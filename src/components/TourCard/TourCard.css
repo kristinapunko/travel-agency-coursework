@@ -1,0 +1,368 @@
+.tour-card {
+    width: 100%;
+    max-width: 500px;
+  
+    list-style: none;
+  
+    border: 1px solid rgba(54, 29, 50, 0.15);
+    border-radius: 18px;
+  
+    padding: 20px;
+  
+    box-sizing: border-box;
+  
+    display: flex;
+    flex-direction: column;
+  
+    background-color: #f5eeee;
+  
+    box-shadow:
+      0 10px 15px -3px rgba(0, 0, 0, 0.1),
+      0 4px 6px -4px rgba(0, 0, 0, 0.1);
+  
+    overflow: hidden;
+  }
+  
+  
+  /* Неактивний тур */
+  .tour-card.is-inactive {
+    background-color: #f3ebeb;
+  }
+  
+  
+  /* =========================
+     ЗОБРАЖЕННЯ
+     ========================= */
+  
+  .image-container {
+    position: relative;
+  
+    width: 100%;
+    height: 200px;
+  
+    overflow: hidden;
+  
+    border-radius: 18px;
+  
+    background-color: #ddd;
+  }
+  
+  
+  .tour-image {
+    width: 100%;
+    height: 100%;
+  
+    object-fit: cover;
+  
+    display: block;
+  }
+  
+  
+  /* Затемнення */
+  .image-overlay {
+    position: absolute;
+  
+    inset: 0;
+  
+    background-color: #000;
+  
+    pointer-events: none;
+  }
+  
+  
+  .image-overlay.active {
+    opacity: 0.15;
+  }
+  
+  
+  .image-overlay.inactive {
+    opacity: 0.5;
+  }
+  
+  
+  /* =========================
+     НЕАКТИВНИЙ ТУР
+     ========================= */
+  
+  .inactive-badge {
+    position: absolute;
+  
+    top: 50%;
+    left: 50%;
+  
+    transform: translate(-50%, -50%);
+  
+    z-index: 5;
+  
+    color: #f1e8e6;
+  
+    font-size: 28px;
+    font-weight: 700;
+  
+    white-space: nowrap;
+  
+    text-shadow:
+      0 2px 5px rgba(0, 0, 0, 0.5);
+  }
+  
+  
+  /* =========================
+     ІКОНКИ
+     ========================= */
+  
+  .card-icons {
+    position: absolute;
+  
+    top: 15px;
+    right: 15px;
+  
+    z-index: 10;
+  
+    display: flex;
+    flex-direction: column;
+  
+    gap: 8px;
+  }
+  
+  
+  .icon-button {
+    width: 40px;
+    height: 40px;
+  
+    border: none;
+    border-radius: 50%;
+  
+    background-color: white;
+  
+    color: #543c52;
+  
+    font-size: 27px;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    cursor: pointer;
+  
+    box-shadow:
+      0 2px 6px rgba(0, 0, 0, 0.12);
+  }
+  
+  
+  .icon-button:hover {
+    transform: scale(1.05);
+  }
+  
+  
+  /* =========================
+     КОНТЕНТ
+     ========================= */
+  
+  .tour-content {
+    width: 100%;
+  
+    margin-top: 18px;
+  }
+  
+  
+  /* Назва + країна */
+  
+  .tour-header {
+    display: flex;
+  
+    align-items: center;
+    justify-content: space-between;
+  
+    gap: 20px;
+  
+    padding: 0 10px;
+  }
+  
+  
+  .tour-title {
+    width: 55%;
+  
+    margin: 0;
+  
+    color: #361d32;
+  
+    font-size: 17px;
+    font-weight: 700;
+  
+    text-align: left;
+  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  
+  .tour-country {
+    width: 45%;
+  
+    margin: 0;
+  
+    color: #543c52;
+  
+    font-size: 16px;
+  
+    text-align: right;
+  
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  
+  
+  /* =========================
+     РЕЙТИНГ
+     ========================= */
+  
+  .tour-rating {
+    display: flex;
+  
+    align-items: center;
+    justify-content: center;
+  
+    gap: 7px;
+  
+    margin: 14px 0 10px;
+  
+    font-size: 15px;
+  }
+  
+  
+  .rating-score {
+    color: #f55951;
+  
+    font-weight: 700;
+  }
+  
+  
+  .reviews-count {
+    color: #543c52;
+  }
+  
+  
+  /* =========================
+     ДЕТАЛІ
+     ========================= */
+  
+  .tour-details-list {
+    display: flex;
+    flex-direction: column;
+  
+    gap: 7px;
+  
+    padding: 0 10px;
+  
+    font-size: 14px;
+  }
+  
+  
+  .detail-item {
+    display: flex;
+  
+    align-items: center;
+  
+    gap: 10px;
+  
+    margin: 0;
+  
+    color: #543c52;
+  }
+  
+  
+  .detail-icon {
+    width: 20px;
+  
+    color: #361d32;
+  
+    font-size: 16px;
+  }
+  
+  
+  /* =========================
+     ЦІНА
+     ========================= */
+  
+  .tour-pricing {
+    width: 100%;
+  
+    margin-top: 18px;
+  
+    padding: 0 10px;
+  
+    box-sizing: border-box;
+  }
+  
+  
+  .people-count {
+    margin: 0 0 5px;
+  
+    color: #543c52;
+  
+    font-size: 16px;
+  
+    text-align: right;
+  }
+  
+  
+  .price-row {
+    display: flex;
+  
+    align-items: center;
+  
+    gap: 8px;
+  }
+  
+  
+  .old-price {
+    color: #f55951;
+  
+    font-size: 17px;
+  
+    text-decoration: line-through;
+  }
+  
+  
+  .price {
+    color: #f55951;
+  
+    font-size: 29px;
+  
+    font-weight: 700;
+  }
+  
+  
+  /* =========================
+     АДАПТИВНІСТЬ
+     ========================= */
+  
+  @media (max-width: 600px) {
+    .tour-card {
+      max-width: 100%;
+  
+      padding: 14px;
+    }
+  
+    .image-container {
+      height: 180px;
+    }
+  
+    .inactive-badge {
+      font-size: 23px;
+    }
+  
+    .tour-title {
+      font-size: 15px;
+    }
+  
+    .tour-country {
+      font-size: 14px;
+    }
+  
+    .price {
+      font-size: 25px;
+    }
+  }

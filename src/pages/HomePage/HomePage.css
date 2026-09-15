@@ -1,0 +1,257 @@
+/* =========================
+   ОСНОВНА СТОРІНКА
+   ========================= */
+
+   .home-page {
+    min-height: 100vh;
+  
+    background-color: #fffafa;
+  
+    color: #361d32;
+  }
+  
+  
+  /* =========================
+     ЗАГАЛЬНІ НАЛАШТУВАННЯ
+     ========================= */
+  
+  .home-page section {
+    width: 100%;
+    max-width: 1500px;
+  
+    margin: 0 auto;
+  
+    box-sizing: border-box;
+  }
+  
+  
+  /* Маленький підпис над заголовками */
+  
+  .section-label {
+    margin: 0 0 8px;
+  
+    color: #f55951;
+  
+    font-size: 12px;
+    font-weight: 700;
+  
+    letter-spacing: 2px;
+  
+    text-transform: uppercase;
+  }
+  
+  
+  /* =========================
+     ABOUT
+     ========================= */
+  
+  .about-section {
+    padding: 80px 50px;
+  
+    background-color: #f1e8e6;
+  
+    border-bottom: 1px solid rgba(54, 29, 50, 0.1);
+  }
+  
+  
+  .about-content {
+    max-width: 850px;
+  
+    margin: 0 auto;
+  
+    text-align: center;
+  }
+  
+  
+  .about-content h2 {
+    margin: 0 0 20px;
+  
+    color: #361d32;
+  
+    font-size: 42px;
+    line-height: 1.15;
+    font-weight: 700;
+  }
+  
+  
+  .about-text {
+    max-width: 720px;
+  
+    margin: 0 auto;
+  
+    color: #543c52;
+  
+    font-size: 17px;
+    line-height: 1.7;
+  }
+  
+  
+  /* =========================
+     КАТАЛОГ
+     ========================= */
+  
+  .catalog-section {
+    padding: 55px 40px 80px;
+  }
+  
+  
+  .catalog-header {
+    display: flex;
+  
+    align-items: flex-end;
+    justify-content: space-between;
+  
+    gap: 30px;
+  
+    margin-bottom: 30px;
+  }
+  
+  
+  .catalog-header h2 {
+    margin: 0;
+  
+    color: #361d32;
+  
+    font-size: 34px;
+    font-weight: 700;
+  }
+  
+  
+  .tour-count {
+    margin: 0;
+  
+    color: #543c52;
+  
+    font-size: 15px;
+  }
+  
+  
+  .tour-count strong {
+    margin-left: 6px;
+  
+    color: #f55951;
+  
+    font-size: 17px;
+  }
+  
+  
+  /* =========================
+     СІТКА ТУРІВ
+     ========================= */
+  
+  .tour-grid {
+    display: grid;
+  
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  
+    gap: 28px;
+  
+    padding: 0;
+    margin: 0;
+  
+    list-style: none;
+  }
+  
+  
+  /* =========================
+     ПОВІДОМЛЕННЯ ПРО ВІДСУТНІСТЬ
+     ========================= */
+  
+  .empty-catalog {
+    display: flex;
+  
+    align-items: center;
+    justify-content: center;
+  
+    min-height: 200px;
+  
+    border: 1px solid rgba(54, 29, 50, 0.12);
+  
+    border-radius: 18px;
+  
+    background-color: #f5eeee;
+  }
+  
+  
+  .empty-catalog p {
+    margin: 0;
+  
+    color: #543c52;
+  
+    font-size: 17px;
+  }
+  
+  
+  /* =========================
+     АДАПТИВНІСТЬ
+     ========================= */
+  
+  @media (max-width: 1200px) {
+  
+    .tour-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  
+  }
+  
+  
+  @media (max-width: 800px) {
+  
+    .about-section {
+      padding: 60px 25px;
+    }
+  
+  
+    .about-content h2 {
+      font-size: 34px;
+    }
+  
+  
+    .catalog-section {
+      padding: 45px 25px 60px;
+    }
+  
+  
+    .catalog-header {
+      align-items: flex-start;
+  
+      flex-direction: column;
+  
+      gap: 10px;
+    }
+  
+  
+    .catalog-header h2 {
+      font-size: 30px;
+    }
+  
+  }
+  
+  
+  @media (max-width: 600px) {
+  
+    .tour-grid {
+      grid-template-columns: 1fr;
+    }
+  
+  
+    .about-section {
+      padding: 45px 18px;
+    }
+  
+  
+    .about-content h2 {
+      font-size: 29px;
+    }
+  
+  
+    .about-text {
+      font-size: 15px;
+    }
+  
+  
+    .catalog-section {
+      padding: 35px 15px 50px;
+    }
+  
+  }
