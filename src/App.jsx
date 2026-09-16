@@ -2,10 +2,11 @@ import HomePage from './pages/HomePage/HomePage';
 import './App.css';
 
 export default function App() {
+  const appTitle = import.meta.env.VITE_APP_TITLE || 'Travel Agency';
+  
   return (
     <div className="app">
 
-      {/* Шапка сайту */}
       <header className="site-header">
 
         <div className="header-content">
@@ -19,13 +20,11 @@ export default function App() {
 
       </header>
 
-      {/* Основний вміст */}
       <HomePage />
 
-      {/* Футер */}
       <footer className="site-footer">
         <p>
-          © 2026 Турагентство. Навчальний проєкт.
+          © 2026 {appTitle}. Навчальний проєкт.
         </p>
       </footer>
 

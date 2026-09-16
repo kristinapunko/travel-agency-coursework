@@ -1,16 +1,48 @@
-# React + Vite
+# Веб-сайт автоматизації управління роботою турагентства
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Вебзастосунок для автоматизації підбору, перегляду та онлайн-бронювання туристичних послуг.
+Поточний результат (Л 1.1): початкова сторінка із секцією опису агенції та каталогом турів на локальних даних.
 
-Currently, two official plugins are available:
+## Середовище
+- **Node.js:** v24.x
+- **npm:** 10.x
+- **Git:** 2.4x
+- **Docker і Docker Compose:** Docker Desktop (Engine 27.x, Compose v2.x)
+- **Основний варіант:** Варіант D+ (Docker Desktop із бекендом WSL 2)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Запуск
 
-## React Compiler
+### Нативно:
+```bash
+npm install
+npm run dev
+Застосунок буде доступний за адресою: http://localhost:5173
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+У Docker:
+Bash
+# Побудова образу
+docker compose build
 
-## Expanding the ESLint configuration
+# Одноразове встановлення залежностей у виділений volume
+docker compose run --rm web npm install
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+# Запуск середовища розробки
+docker compose up
+Адреса Docker-сервісу: http://localhost:5173
+
+Зупинення контейнера: Ctrl + C або docker compose down
+
+Збірка
+Виробнича збірка нативно:
+
+Bash
+npm run build
+npm run preview
+Або у Docker-контейнері:
+
+Bash
+docker compose run --rm web npm run build
+План
+Детальний план сутностей, сценаріїв використання та майбутніх сторінок описано у файлі docs/project-plan.md.
+
+Форми бронювання, фільтрація, маршрутизація та асинхронний обмін даними заплановані на наступні лабораторні роботи.

@@ -4,7 +4,7 @@ export const tours = [
       name: 'Від краю до краю: Париж',
       country: 'Франція',
       duration: '6 днів + 5 ночей',
-      price: 12980,
+      price: 18980,
       oldPrice: null,
       description:
         'Незабутня подорож до Парижа з оглядом Ейфелевої вежі, Лувру та найвідоміших пам’яток міста.',
@@ -32,7 +32,7 @@ export const tours = [
       transport: 'Виїзд з Кракова',
       food: 'All Inclusive',
       travelers: '2 дорослих',
-      rating: 4.9,
+      rating: .9,
       reviews: 18,
       isAvailable: true,
       imageUrl:

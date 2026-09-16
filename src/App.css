@@ -1,219 +1,127 @@
-/* =========================
-   ОСНОВНІ НАЛАШТУВАННЯ
-   ========================= */
+* {
+  box-sizing: border-box;
+}
 
-   * {
-    box-sizing: border-box;
-  }
-  
-  
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  
-  body {
-    margin: 0;
-  
-    font-family:
-      Arial,
-      Helvetica,
-      sans-serif;
-  
-    background-color: #fffafa;
-  
-    color: #361d32;
-  }
-  
-  
-  /* =========================
-     APP
-     ========================= */
-  
-  .app {
-    min-height: 100vh;
-  
-    display: flex;
-    flex-direction: column;
-  }
-  
-  
-  /* =========================
-     HEADER
-     ========================= */
-  
-  .site-header {
-    position: sticky;
-  
-    top: 0;
-  
-    z-index: 100;
-  
-    width: 100%;
-  
-    background-color: #361d32;
-  
-    box-shadow:
-      0 4px 12px rgba(54, 29, 50, 0.15);
-  }
-  
-  
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: #fffafa;
+  color: #361d32;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  width: 100%;
+  background-color: #361d32;
+  box-shadow: 0 4px 12px rgba(54, 29, 50, 0.15);
+}
+
+.header-content {
+  width: 100%;
+  max-width: 1500px;
+  min-height: 76px;
+  margin: 0 auto;
+  padding: 0 40px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.site-header h1 {
+  margin: 0;
+  color: #f1e8e6;
+  font-size: 25px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.site-header nav {
+  display: flex;
+  align-items: center;
+  gap: 35px;
+}
+
+.site-header nav a {
+  position: relative;
+  color: #f1e8e6;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.site-header nav a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -7px;
+  width: 0;
+  height: 2px;
+  background-color: #f55951;
+  transition: width 0.2s ease;
+}
+
+.site-header nav a:hover {
+  color: #ffffff;
+}
+
+.site-header nav a:hover::after {
+  width: 100%;
+}
+
+.site-footer {
+  margin-top: auto;
+  padding: 25px 20px;
+  background-color: #361d32;
+  text-align: center;
+}
+
+.site-footer p {
+  margin: 0;
+  color: #f1e8e6;
+  font-size: 14px;
+}
+
+@media (max-width: 700px) {
   .header-content {
-    width: 100%;
-    max-width: 1500px;
-  
-    min-height: 76px;
-  
-    margin: 0 auto;
-  
-    padding: 0 40px;
-  
-    display: flex;
-  
-    align-items: center;
-    justify-content: space-between;
+    min-height: 65px;
+    padding: 0 20px;
   }
-  
-  
+
   .site-header h1 {
-    margin: 0;
-  
-    color: #f1e8e6;
-  
-    font-size: 25px;
-  
-    font-weight: 700;
-  
-    letter-spacing: 0.5px;
+    font-size: 20px;
   }
-  
-  
-  /* =========================
-     NAVIGATION
-     ========================= */
-  
+
   .site-header nav {
-    display: flex;
-  
-    align-items: center;
-  
-    gap: 35px;
+    gap: 18px;
   }
-  
-  
+
   .site-header nav a {
-    position: relative;
-  
-    color: #f1e8e6;
-  
-    text-decoration: none;
-  
-    font-size: 16px;
-  
-    font-weight: 500;
-  
-    transition:
-      color 0.2s ease;
-  }
-  
-  
-  .site-header nav a::after {
-    content: '';
-  
-    position: absolute;
-  
-    left: 0;
-    bottom: -7px;
-  
-    width: 0;
-    height: 2px;
-  
-    background-color: #f55951;
-  
-    transition:
-      width 0.2s ease;
-  }
-  
-  
-  .site-header nav a:hover {
-    color: #ffffff;
-  }
-  
-  
-  .site-header nav a:hover::after {
-    width: 100%;
-  }
-  
-  
-  /* =========================
-     FOOTER
-     ========================= */
-  
-  .site-footer {
-    margin-top: auto;
-  
-    padding: 25px 20px;
-  
-    background-color: #361d32;
-  
-    text-align: center;
-  }
-  
-  
-  .site-footer p {
-    margin: 0;
-  
-    color: #f1e8e6;
-  
     font-size: 14px;
   }
-  
-  
-  /* =========================
-     АДАПТИВНІСТЬ
-     ========================= */
-  
-  @media (max-width: 700px) {
-  
-    .header-content {
-      min-height: 65px;
-  
-      padding: 0 20px;
-    }
-  
-  
-    .site-header h1 {
-      font-size: 20px;
-    }
-  
-  
-    .site-header nav {
-      gap: 18px;
-    }
-  
-  
-    .site-header nav a {
-      font-size: 14px;
-    }
-  
+}
+
+@media (max-width: 450px) {
+  .header-content {
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 15px;
   }
-  
-  
-  @media (max-width: 450px) {
-  
-    .header-content {
-      flex-direction: column;
-  
-      justify-content: center;
-  
-      gap: 8px;
-  
-      padding: 12px 15px;
-    }
-  
-  
-    .site-header nav {
-      gap: 25px;
-    }
-  
+
+  .site-header nav {
+    gap: 25px;
   }
+}
