@@ -1,0 +1,14 @@
+.tour-count {
+    margin: 0;
+    color: #543c52;
+    font-size: 15px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .tour-count strong {
+    color: #f55951;
+    font-size: 17px;
+    font-weight: 700;
+  }

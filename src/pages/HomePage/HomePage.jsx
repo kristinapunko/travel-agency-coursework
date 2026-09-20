@@ -1,50 +1,30 @@
-import TourCard from "../../components/TourCard/TourCard";
+import CatalogSummary from "../../components/tours/CatalogSummary/CatalogSummary";
+import TourList from "../../components/tours/TourList/TourList";
 import { tours } from "../../data/tours";
+import Section from "../../components/ui/Section";
 import "./HomePage.css";
 
 export default function HomePage() {
   return (
-    <main className="home-page">
-      <section id="about" className="about-section">
+    <div className="home-page-container">
+      <Section id="about" title="Подорожі, які хочеться запам'ятати">
         <div className="about-content">
           <p className="section-label">TRAVEL AGENCY</p>
-
-          <h2>Подорожі, які хочеться запам'ятати</h2>
-
           <p className="about-text">
-            Ми допомагаємо знаходити цікаві туристичні пропозиції для
-            відпочинку, подорожей та нових вражень. Обирайте тур, переглядайте
-            деталі та плануйте свою наступну подорож онлайн.
+            Ми допомагаємо знаходити цікаві туристичні пропозиції для відпочинку,
+            подорожей та нових вражень. Обирайте тур, переглядайте деталі та
+            плануйте свою наступну подорож онлайн.
           </p>
         </div>
-      </section>
+      </Section>
 
-      <section id="catalog" className="catalog-section">
-        <div className="catalog-header">
-          <div>
-            <p className="section-label">НАШІ ПРОПОЗИЦІЇ</p>
-
-            <h2>Каталог турів</h2>
-          </div>
-
-          <p className="tour-count">
-            Усього пропозицій:
-            <strong>{tours.length}</strong>
-          </p>
+      <Section id="catalog" title="Каталог турів">
+        <div className="catalog-header-bar">
+          <p className="section-label">НАШІ ПРОПОЗИЦІЇ</p>
+          <CatalogSummary total={tours.length} />
         </div>
-
-        {tours.length === 0 ? (
-          <div className="empty-catalog">
-            <p>Наразі актуальні тури відсутні.</p>
-          </div>
-        ) : (
-          <ul className="tour-grid">
-            {tours.map((tour) => (
-              <TourCard key={tour.id} tour={tour} />
-            ))}
-          </ul>
-        )}
-      </section>
-    </main>
+        <TourList items={tours} />
+      </Section>
+    </div>
   );
 }

@@ -50,17 +50,12 @@
   opacity: 0.5;
 }
 
-.inactive-badge {
+.availability-badge-slot {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 5;
-  color: #f1e8e6;
-  font-size: 28px;
-  font-weight: 700;
-  white-space: nowrap;
-  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
 }
 
 .card-icons {
@@ -209,10 +204,6 @@
 
   .image-container {
     height: 180px;
-  }
-
-  .inactive-badge {
-    font-size: 23px;
   }
 
   .tour-title {

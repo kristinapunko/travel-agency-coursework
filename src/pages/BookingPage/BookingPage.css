@@ -1,0 +1,75 @@
+.booking-page-content {
+    background: #f5eeee;
+    padding: 24px;
+    border-radius: 16px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .booking-tour-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(54, 29, 50, 0.15);
+  }
+
+
+  #booking {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px 36px 80px;
+  }
+  
+  #booking h2 {
+    font-size: 32px;
+    font-weight: 700;
+    color: #361d32;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  
+  .booking-page-content {
+    background-color: rgba(84, 60, 82, 0.9);
+    border: 1px solid #edd2cb;
+    border-radius: 20px;
+    padding: 36px 44px;
+    max-width: 620px;
+    margin: 0 auto;
+    box-shadow: 0 12px 30px rgba(54, 29, 50, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    box-sizing: border-box;
+  }
+  
+  .booking-tour-summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    padding-bottom: 14px;
+    border-bottom: 1px solid rgba(237, 210, 203, 0.2);
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  
+  .booking-tour-summary p {
+    margin: 0;
+    color: #ffffff;
+    font-size: 16px;
+  }
+  
+  .booking-tour-summary strong {
+    color: #edd2cb;
+  }
+  
+  @media (max-width: 650px) {
+    #booking {
+      padding: 10px 16px 50px;
+    }
+  
+    .booking-page-content {
+      padding: 24px 18px;
+    }
+  }
