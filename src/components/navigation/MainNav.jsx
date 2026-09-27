@@ -1,13 +1,24 @@
+import { NavLink } from "react-router";
+import "./MainNav.css";
+
 export default function MainNav({ links }) {
-    return (
-      <nav aria-label="Основна навігація">
-        <ul className="nav-list">
-          {links.map((link) => (
-            <li key={link.href}>
-              <a href={link.href}>{link.label}</a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    )
-  }
+  return (
+    <nav className="site-nav" aria-label="Основна навігація">
+      <ul className="nav-list">
+        {links.map((link) => (
+          <li key={link.to} className="nav-item">
+            <NavLink
+              to={link.to}
+              end={link.end}
+              className={({ isActive }) =>
+                isActive ? "nav-link active" : "nav-link"
+              }
+            >
+              {link.label}
+            </NavLink>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}

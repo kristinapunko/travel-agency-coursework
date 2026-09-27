@@ -1,23 +1,64 @@
+import { Routes, Route } from "react-router";
 import AppLayout from "./components/layout/AppLayout";
-import TourSelectionProvider from "./providers/TourSelectionProvider";
+import BookingsLayout from "./components/layout/BookingsLayout/BookingsLayout";
+import HomePage from "./pages/HomePage/HomePage";
 import CatalogContainer from "./pages/CatalogContainer";
-import BookingContainer from "./pages/BookingContainer";
-import { tours } from "./data/tours";
-import "./App.css";
+import TourDetailsPage from "./pages/TourDetailsPage/TourDetailsPage";
+import BookingsPage from "./pages/BookingsPage/BookingsPage";
+import BookingCreatePage from "./pages/BookingCreatePage/BookingCreatePage";
+import BookingEditPage from "./pages/BookingEditPage/BookingEditPage";
+import NotFoundPage from "./pages/NotFoundPage/NotFoundPage";
 
-const navigationLinks = [
-  { href: "#about", label: "Про нас" },
-  { href: "#catalog", label: "Каталог турів" },
-  { href: "#booking", label: "Заявка на бронювання" },
-];
+import { tours } from "./data/tours";
+import { bookings } from "./data/bookings";
 
 export default function App() {
   return (
-    <AppLayout title="Travel Agency" links={navigationLinks}>
-      <TourSelectionProvider items={tours}>
-        <CatalogContainer items={tours} />
-        <BookingContainer />
-      </TourSelectionProvider>
-    </AppLayout>
+    <Routes>
+      <Route element={<AppLayout items={tours} />}>
+        <Route index element={<HomePage />} />
+        <Route path="tours">
+          <Route
+            index
+            element={<CatalogContainer items={tours} />}
+          />
+          <Route
+            path=":tourId"
+            element={<TourDetailsPage items={tours} />}
+          />
+        </Route>
+        <Route
+          path="bookings"
+          element={<BookingsLayout />}
+        >
+          <Route
+            index
+            element={
+              <BookingsPage
+                bookings={bookings}
+                items={tours}
+              />
+            }
+          />
+          <Route
+            path="new"
+            element={<BookingCreatePage items={tours} />}
+          />
+          <Route
+            path=":bookingId/edit"
+            element={
+              <BookingEditPage
+                bookings={bookings}
+                items={tours}
+              />
+            }
+          />
+        </Route>
+        <Route
+          path="*"
+          element={<NotFoundPage />}
+        />
+      </Route>
+    </Routes>
   );
 }

@@ -2,60 +2,78 @@
 .booking-form-preview {
   width: 100%;
   box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
-  padding: 30px;
-  border-radius: 22px;
+
+  padding: 22px 24px;
+
+  border-radius: 16px;
   border: 1px solid #e2d5d2;
+
   background: #fffafa;
-  box-shadow: 0 15px 40px rgba(80, 50, 45, 0.12);
-  opacity: 1;
-  filter: none;
+
+  box-shadow: 0 8px 24px rgba(80, 50, 45, 0.08);
 }
 
 .booking-form__title {
+  margin: 0 0 5px;
+
   color: #361d32;
-  margin-top: 0;
-  margin-bottom: 8px;
-  font-size: 22px;
+
+  font-size: 20px;
+  line-height: 1.3;
+  font-weight: 600;
 }
 
 .booking-form__notice {
-  font-size: 13px;
+  margin: 0 0 18px;
+
   color: #9a7771;
-  margin-bottom: 24px;
+
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .tour-field-wrapper {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 20px;
+  gap: 6px;
+
+  margin-bottom: 14px;
 }
 
 .tour-field-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+
   width: 100%;
 }
 
 .form-field-label {
   color: #361d32;
-  font-size: 15px;
-  font-weight: 700;
+
+  font-size: 13px;
+  font-weight: 600;
 }
 
 .tour-readonly-input {
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 14px;
-  border-radius: 10px;
-  background-color: #f7f3f3;
+
+  padding: 9px 11px;
+
+  border-radius: 8px;
   border: 1px solid #d8c8c5;
+
+  background-color: #f7f3f3;
+
   color: #361d32;
-  font-weight: 600;
-  font-size: 15px;
+
+  font-size: 14px;
+  font-weight: 500;
+
   cursor: default;
   outline: none;
 }
@@ -63,26 +81,34 @@
 .custom-input-group {
   position: relative;
   width: 100%;
-  margin: 22px 0 28px;
+
+  margin: 16px 0 20px;
 }
 
 .custom-form-input,
 .custom-form-textarea {
   display: block;
+
   width: 100%;
   box-sizing: border-box;
-  padding: 12px 42px 10px 0;
+
+  padding: 9px 32px 7px 0;
+
   color: #2d2020;
   background: transparent;
+
   border: 0;
-  border-bottom: 2px solid #d8c8c5;
+  border-bottom: 1px solid #d8c8c5;
+
   outline: none;
+
   font-family: inherit;
-  font-size: 15px;
-  line-height: 1.5;
+  font-size: 14px;
+  line-height: 1.4;
+
   transition:
-    border-color 0.25s ease,
-    box-shadow 0.25s ease;
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .custom-form-input::placeholder,
@@ -93,47 +119,61 @@
 .custom-form-input:focus,
 .custom-form-textarea:focus {
   border-bottom-color: #f55951;
-  box-shadow: 0 2px 0 rgba(245, 89, 81, 0.12);
+
+  box-shadow: 0 1px 0 rgba(245, 89, 81, 0.1);
 }
 
 .custom-form-label {
   position: absolute;
+
   left: 0;
-  top: 12px;
+  top: 9px;
+
   color: #9a7771;
-  font-size: 15px;
+
+  font-size: 14px;
   font-weight: 500;
+
   line-height: 1.4;
+
   pointer-events: none;
+
   transition:
     top 0.2s ease,
     color 0.2s ease,
     font-size 0.2s ease;
 }
 
-/* Анімація злітання лейбла при фокусі або наявності тексту */
 .custom-form-input:focus ~ .custom-form-label,
 .custom-form-textarea:focus ~ .custom-form-label,
 .custom-form-input:not(:placeholder-shown) ~ .custom-form-label,
 .custom-form-textarea:not(:placeholder-shown) ~ .custom-form-label {
-  top: -19px;
+  top: -16px;
+
   color: #f55951;
-  font-size: 12px;
+
+  font-size: 11px;
 }
 
 .input-icon-box {
   position: absolute;
-  top: 11px;
-  right: 5px;
+
+  top: 8px;
+  right: 3px;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   color: #9a7771;
-  font-size: 17px;
+
+  font-size: 15px;
+
   pointer-events: none;
+
   transition:
-    color 0.25s ease,
-    transform 0.25s ease;
+    color 0.2s ease,
+    transform 0.2s ease;
 }
 
 .custom-input-group:focus-within .input-icon-box {
@@ -142,43 +182,81 @@
 }
 
 .textarea-icon {
-  top: 13px;
+  top: 10px;
 }
 
 .input-subhint {
   display: block;
-  margin-top: 7px;
+
+  margin-top: 5px;
+
   color: #9a7771;
-  font-size: 11px;
-  opacity: 1;
+
+  font-size: 10px;
+  line-height: 1.35;
 }
 
 .custom-form-textarea {
-  min-height: 80px;
+  min-height: 65px;
+
   resize: vertical;
 }
 
-/* Кнопки дій */
+.checkbox-field {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+
+  margin: 4px 0 14px;
+
+  color: #543c52;
+
+  font-size: 13px;
+  line-height: 1.4;
+
+  cursor: pointer;
+}
+
+.checkbox-field input {
+  width: 15px;
+  height: 15px;
+
+  margin: 1px 0 0;
+
+  accent-color: #f55951;
+
+  cursor: pointer;
+}
+
 .form-actions {
   display: flex;
-  gap: 14px;
-  margin-top: 12px;
-  flex-wrap: wrap;
+  gap: 10px;
+
+  margin-top: 4px;
 }
 
 .form-actions > * {
-  flex: 1 1 180px;
+  flex: 1;
 }
 
 @media (max-width: 600px) {
   .booking-form,
   .booking-form-preview {
-    padding: 20px;
-    border-radius: 18px;
+    padding: 18px;
+    border-radius: 14px;
+  }
+
+  .booking-form__title {
+    font-size: 18px;
+  }
+
+  .booking-form__notice {
+    margin-bottom: 16px;
   }
 
   .form-actions {
     flex-direction: column;
+    gap: 8px;
   }
 
   .form-actions > * {

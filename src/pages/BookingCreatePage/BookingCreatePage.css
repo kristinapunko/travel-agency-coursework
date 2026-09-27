@@ -1,0 +1,18 @@
+.booking-create-actions {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  
+  @media (max-width: 640px) {
+    .booking-create-actions {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  
+    .booking-create-actions a,
+    .booking-create-actions button {
+      width: 100%;
+    }
+  }

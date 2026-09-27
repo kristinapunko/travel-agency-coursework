@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+
 import Section from "../../components/ui/Section";
 import EmptyState from "../../components/ui/EmptyState";
 import AppButton from "../../components/ui/AppButton";
-import BookingSummary from "../../components/bookings/BookingSummary/BookingSummary";                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-import "./BookingPage.css";
 import BookingForm from "../../components/bookings/BookingForm/BookingForm";
+import BookingSummary from "../../components/bookings/BookingSummary/BookingSummary";
+
+import "./BookingPage.css";
 
 function createEmptyDraft() {
   return {
@@ -16,15 +18,21 @@ function createEmptyDraft() {
   };
 }
 
-export default function BookingPage({ selectedTour, onClearSelection }) {
-  const [draft, setDraft] = useState(createEmptyDraft);
-
-  const title = selectedTour
-    ? `Бронювання: ${selectedTour.name} | Travel Agency`
-    : "Travel Agency — Тури та відпочинок";
+export default function BookingPage({
+  title = "Оформлення заявки",
+  tour,
+  initialDraft,
+  onClearSelection,
+  onCancel,
+  cancelLabel = "Вийти без збереження",
+}) {
+  const [draft, setDraft] = useState(
+    () => initialDraft || createEmptyDraft()
+  );
 
   useEffect(() => {
     const previousTitle = document.title;
+
     document.title = title;
 
     return () => {
@@ -33,35 +41,52 @@ export default function BookingPage({ selectedTour, onClearSelection }) {
   }, [title]);
 
   const handleCustomerNameChange = (customerName) => {
-    setDraft((prev) => ({ ...prev, customerName }));
+    setDraft((prev) => ({
+      ...prev,
+      customerName,
+    }));
   };
 
   const handlePhoneChange = (customerPhone) => {
-    setDraft((prev) => ({ ...prev, customerPhone }));
+    setDraft((prev) => ({
+      ...prev,
+      customerPhone,
+    }));
   };
 
   const handleEmailChange = (customerEmail) => {
-    setDraft((prev) => ({ ...prev, customerEmail }));
+    setDraft((prev) => ({
+      ...prev,
+      customerEmail,
+    }));
   };
 
   const handleNotesChange = (notes) => {
-    setDraft((prev) => ({ ...prev, notes }));
+    setDraft((prev) => ({
+      ...prev,
+      notes,
+    }));
   };
 
   const handleNeedsTransferChange = (needsTransfer) => {
-    setDraft((prev) => ({ ...prev, needsTransfer }));
+    setDraft((prev) => ({
+      ...prev,
+      needsTransfer,
+    }));
   };
 
   const handleReset = () => {
     setDraft(createEmptyDraft());
   };
 
-  if (!selectedTour) {
+  if (!tour) {
     return (
       <Section id="booking" title="Заявка на бронювання">
         <EmptyState title="Тур ще не обрано">
           <p>
-            Будь ласка, перейдіть до <a href="#catalog">каталогу турів</a> та оберіть тур для оформлення заявки.
+            Будь ласка, перейдіть до{" "}
+            <a href="#catalog">каталогу турів</a> та оберіть тур
+            для оформлення заявки.
           </p>
         </EmptyState>
       </Section>
@@ -69,12 +94,12 @@ export default function BookingPage({ selectedTour, onClearSelection }) {
   }
 
   return (
-    <Section id="booking" title="Заявка на бронювання">
+    <Section id="booking" title={title}>
       <div className="booking-page-content">
         <BookingForm
           idPrefix="booking-draft"
-          tourName={selectedTour.name}
-          isAvailable={selectedTour.isAvailable}
+          tourName={tour.name}
+          isAvailable={tour.isAvailable}
           draft={draft}
           onCustomerNameChange={handleCustomerNameChange}
           onPhoneChange={handlePhoneChange}
@@ -84,13 +109,32 @@ export default function BookingPage({ selectedTour, onClearSelection }) {
           onReset={handleReset}
         />
 
-        <BookingSummary tourName={selectedTour.name} draft={draft} />
+        <BookingSummary
+          tourName={tour.name}
+          draft={draft}
+        />
 
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <AppButton variant="secondary" onClick={onClearSelection}>
-            Скасувати вибір туру та скинути чернетку
-          </AppButton>
-        </div>
+        {onClearSelection && (
+          <div className="booking-page-action">
+            <AppButton
+              variant="secondary"
+              onClick={onClearSelection}
+            >
+              Скасувати вибір туру та скинути чернетку
+            </AppButton>
+          </div>
+        )}
+
+        {onCancel && (
+          <div className="booking-page-action">
+            <AppButton
+              variant="secondary"
+              onClick={onCancel}
+            >
+              {cancelLabel}
+            </AppButton>
+          </div>
+        )}
       </div>
     </Section>
   );

@@ -1,4 +1,4 @@
-import BookingPage from "./BookingPage/BookingPage";
+import BookingPage from "./BookingsPage/BookingsPage";
 import useTourSelection from "../hooks/useTourSelection";
 
 export default function BookingContainer() {

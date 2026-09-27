@@ -1,61 +1,102 @@
-import Section from "../../components/ui/Section";
-import CatalogSummary from "../../components/tours/CatalogSummary/CatalogSummary";
-import Filters from "../../components/tours/Filters/Filters";
-import TourList from "../../components/tours/TourList/TourList";
-import useTourFilters from "../../hooks/useTourFilters";
+import { Link } from "react-router";
+import {
+  FaGlobe,
+  FaPlaneDeparture,
+  FaCalendarAlt,
+} from "react-icons/fa";
+
+import PageHeading from "../../components/ui/PageHeading";
+import AppButton from "../../components/ui/AppButton";
+
 import "./HomePage.css";
 
-export default function HomePage({ items, selectedId, onSelect }) {
-  const {
-    query,
-    setQuery,
-    availableOnly,
-    setAvailableOnly,
-    visibleItems,
-    resetFilters,
-  } = useTourFilters(items);
-
+export default function HomePage() {
   return (
     <div className="home-page">
-      <Section id="about" title="Про наше турагентство">
-        <p>
-          Ми організовуємо незабутні подорожі та відпочинок у наймальовничіших куточках світу.
-        </p>
-        <p>
-          Оберіть тур з каталогу нижче та перейдіть до оформлення попередньої заявки на бронювання.
-        </p>
-      </Section>
+      <section className="home-page-hero">
+        <div className="home-page-content">
+          <p className="home-page-label">
+            Travel Agency
+          </p>
 
-      <Section id="catalog" title="Каталог турів">
-        <CatalogSummary total={items.length} />
+          <PageHeading
+            title="Туристичне агентство «Travel Agency»"
+          />
 
-        <Filters
-          query={query}
-          availableOnly={availableOnly}
-          onQueryChange={setQuery}
-          onAvailableOnlyChange={setAvailableOnly}
-          onReset={resetFilters}
-        />
+          <p className="home-page-description">
+            Організація подорожей світом. Переглядайте каталог
+            турів, дізнавайтеся деталі маршрутів та оформлюйте
+            заявки на свою наступну подорож.
+          </p>
 
-        <p className="visible-count-text">
-          Показано турів за поточними фільтрами: <strong>{visibleItems.length}</strong>
-        </p>
+          <div className="home-page-actions">
+            <Link to="/tours">
+              <AppButton variant="primary">
+                Перейти до каталогу турів
+              </AppButton>
+            </Link>
 
-        <TourList
-          items={visibleItems}
-          selectedId={selectedId}
-          onSelect={onSelect}
-          emptyTitle={
-            items.length === 0
-              ? "Тури ще не додані до каталогу."
-              : "За цими критеріями пошуку турів не знайдено."
-          }
-        />
+            <Link to="/bookings">
+              <AppButton variant="secondary">
+                Переглянути мої заявки
+              </AppButton>
+            </Link>
+          </div>
+        </div>
+      </section>
 
-        <p className="go-to-booking-link">
-          <a href="#booking">↓ Перейти до підготовки заявки</a>
-        </p>
-      </Section>
+      <section className="home-page-info">
+        <div className="home-page-info-content">
+          <p className="home-page-label">
+            Про агентство
+          </p>
+
+          <h2>Подорожуйте легко та комфортно</h2>
+
+          <p>
+            Обирайте туристичні маршрути, переглядайте інформацію
+            про країни та оформлюйте заявки на подорож.
+          </p>
+        </div>
+
+        <div className="home-page-features">
+          <div className="home-page-feature">
+            <span className="home-page-feature-icon">
+              <FaGlobe />
+            </span>
+
+            <h3>Цікаві напрямки</h3>
+
+            <p>
+              Каталог турів для подорожей різними країнами світу.
+            </p>
+          </div>
+
+          <div className="home-page-feature">
+            <span className="home-page-feature-icon">
+              <FaCalendarAlt />
+            </span>
+
+            <h3>Просте оформлення</h3>
+
+            <p>
+              Оберіть тур та заповніть заявку без зайвих кроків.
+            </p>
+          </div>
+
+          <div className="home-page-feature">
+            <span className="home-page-feature-icon">
+              <FaPlaneDeparture />
+            </span>
+
+            <h3>Зручні подорожі</h3>
+
+            <p>
+              Переглядайте всі важливі деталі туру перед вибором.
+            </p>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

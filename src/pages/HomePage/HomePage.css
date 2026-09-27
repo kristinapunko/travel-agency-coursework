@@ -1,107 +1,202 @@
-.home-page-container {
+.home-page {
   width: 100%;
-  box-sizing: border-box;
 }
 
-.home-page-container section {
-  width: 100%;
-  box-sizing: border-box;
-}
-
-#about {
-  background-color: #f1e8e6;
+.home-page-hero {
+  padding: 5rem 1.5rem;
+  background: linear-gradient(
+    135deg,
+    #f1e8e6 0%,
+    #edd2cb 100%
+  );
   border-bottom: 1px solid rgba(54, 29, 50, 0.08);
-  padding: 80px 24px;
+}
+
+.home-page-content {
+  max-width: 900px;
+  margin: 0 auto;
   text-align: center;
 }
 
-#about h2 {
-  font-size: 38px;
-  font-weight: 700;
-  color: #361d32;
-  margin: 0 auto 16px;
-  max-width: 800px;
-  line-height: 1.25;
-}
-
-.about-content {
-  max-width: 760px;
-  margin: 0 auto;
-}
-
-.section-label {
-  margin: 0 0 10px;
+.home-page-label {
+  margin: 0 0 0.75rem;
   color: #f55951;
-  font-size: 13px;
+  font-size: 0.8rem;
   font-weight: 700;
-  letter-spacing: 2px;
+  letter-spacing: 0.15rem;
   text-transform: uppercase;
 }
 
-.about-text {
-  margin: 0 auto;
+.home-page-description {
+  max-width: 720px;
+  margin: 1.5rem auto 0;
   color: #543c52;
-  font-size: 17px;
+  font-size: 1.15rem;
   line-height: 1.7;
 }
 
-#catalog {
-  max-width: 1400px;
+.home-page-actions {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.home-page-actions a {
+  text-decoration: none;
+}
+
+.home-page-info {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 60px 36px 80px;
+  padding: 4.5rem 1.5rem;
 }
 
-#catalog h2 {
-  font-size: 32px;
-  font-weight: 700;
+.home-page-info-content {
+  max-width: 800px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+
+.home-page-info-content h2 {
+  margin: 0 0 1rem;
   color: #361d32;
-  margin: 0 0 10px;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.3;
 }
 
-.catalog-header-bar {
+.home-page-info-content > p:last-child {
+  margin: 0;
+  color: #543c52;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.home-page-features {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.5rem;
+}
+
+.home-page-feature {
+  padding: 1.75rem;
+  background-color: #ffffff;
+  border: 1px solid rgba(54, 29, 50, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 8px 24px rgba(54, 29, 50, 0.08);
+  text-align: center;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.home-page-feature:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(54, 29, 50, 0.12);
+}
+
+.home-page-feature-icon {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-bottom: 30px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid rgba(54, 29, 50, 0.1);
-  flex-wrap: wrap;
-  gap: 12px;
+  justify-content: center;
+
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto 1rem;
+
+  background-color: #f1e8e6;
+  border-radius: 50%;
+
+  color: #f55951;
+  font-size: 1.5rem;
 }
 
-.catalog-header-bar .section-label {
+.home-page-feature-icon svg {
+  display: block;
+}
+
+.home-page-feature h3 {
+  margin: 0 0 0.6rem;
+  color: #361d32;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+.home-page-feature p {
   margin: 0;
+  color: #543c52;
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 @media (max-width: 900px) {
-  #about {
-    padding: 55px 20px;
+  .home-page-hero {
+    padding: 4rem 1.25rem;
   }
 
-  #about h2 {
-    font-size: 30px;
+  .home-page-description {
+    font-size: 1rem;
   }
 
-  .about-text {
-    font-size: 15px;
+  .home-page-info {
+    padding: 3.5rem 1.25rem;
   }
 
-  #catalog {
-    padding: 40px 20px 60px;
+  .home-page-info-content h2 {
+    font-size: 1.75rem;
   }
 
-  #catalog h2 {
-    font-size: 26px;
+  .home-page-features {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+    margin: 0 auto;
   }
 }
 
 @media (max-width: 600px) {
-  #about h2 {
-    font-size: 24px;
+  .home-page-hero {
+    padding: 3rem 1rem;
   }
 
-  .catalog-header-bar {
+  .home-page-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.12rem;
+  }
+
+  .home-page-description {
+    margin-top: 1rem;
+    font-size: 0.95rem;
+  }
+
+  .home-page-actions {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
+    margin-top: 1.5rem;
+  }
+
+  .home-page-actions a {
+    width: 100%;
+  }
+
+  .home-page-actions button {
+    width: 100%;
+  }
+
+  .home-page-info {
+    padding: 3rem 1rem;
+  }
+
+  .home-page-info-content {
+    margin-bottom: 2rem;
+  }
+
+  .home-page-info-content h2 {
+    font-size: 1.5rem;
+  }
+
+  .home-page-feature {
+    padding: 1.5rem;
   }
 }

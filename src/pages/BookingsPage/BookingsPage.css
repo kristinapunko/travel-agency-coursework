@@ -1,0 +1,175 @@
+.bookings-page {
+  width: 100%;
+}
+
+.bookings-page-description {
+  margin: 0.5rem 0 1.5rem;
+  color: #543c52;
+  line-height: 1.6;
+}
+
+.bookings-empty {
+  margin-top: 2rem;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 20px rgba(54, 29, 50, 0.1);
+}
+
+.bookings-section {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  border-radius: 0.75rem;
+  box-shadow: 0 8px 20px rgba(54, 29, 50, 0.1);
+}
+
+.bookings-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.bookings-section-header h2 {
+  margin: 0 0 0.35rem;
+  color: #543c52;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.bookings-section-header p {
+  margin: 0;
+  color: #543c52;
+}
+
+.bookings-section-header strong {
+  color: #f55951;
+}
+
+.table-scroll {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 0.75rem;
+}
+
+.requests-table {
+  width: 100%;
+  min-width: 850px;
+  border-collapse: collapse;
+  color: #543c52;
+}
+
+.requests-table th {
+  padding: 1rem;
+  background-color: #543c52;
+  color: #f1e8e6;
+  font-weight: 600;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.requests-table th:first-child {
+  border-radius: 0.5rem 0 0 0;
+}
+
+.requests-table th:last-child {
+  border-radius: 0 0.5rem 0 0;
+}
+
+.requests-table td {
+  padding: 1rem;
+  border-bottom: 1px solid rgba(84, 60, 82, 0.15);
+  vertical-align: middle;
+}
+
+.requests-table tbody tr {
+  transition: background-color 0.2s ease;
+}
+
+.requests-table tbody tr:hover {
+  background-color: #fdf8f7;
+}
+
+.requests-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.booking-tour {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.booking-tour-name {
+  color: #361d32;
+  font-weight: 600;
+}
+
+.booking-tour-country {
+  color: #543c52;
+  font-size: 0.85rem;
+}
+
+.booking-customer {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.booking-customer strong {
+  color: #361d32;
+}
+
+.booking-customer span {
+  color: #543c52;
+  font-size: 0.9rem;
+}
+
+.transfer-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.transfer-yes {
+  background-color: #f1e8e6;
+  color: #543c52;
+}
+
+.transfer-no {
+  background-color: #f8fafc;
+  color: #64748b;
+}
+
+/* Mobile */
+
+@media (max-width: 640px) {
+  .bookings-section {
+    padding: 1rem;
+  }
+
+  .bookings-section-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .bookings-section-header h2 {
+    font-size: 1.3rem;
+  }
+
+  .bookings-section-header a,
+  .bookings-section-header button {
+    width: 100%;
+  }
+
+  .bookings-empty {
+    padding: 1rem;
+  }
+}
