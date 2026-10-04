@@ -1,83 +1,50 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
+import PageHeading from "../../components/ui/PageHeading";
 import Section from "../../components/ui/Section";
 import EmptyState from "../../components/ui/EmptyState";
 import AppButton from "../../components/ui/AppButton";
 import BookingForm from "../../components/bookings/BookingForm/BookingForm";
 import BookingSummary from "../../components/bookings/BookingSummary/BookingSummary";
 
+import { validateBooking } from "../../domain/bookingValidation.js";
+
 import "./BookingPage.css";
 
-function createEmptyDraft() {
-  return {
-    customerName: "",
-    customerPhone: "",
-    customerEmail: "",
-    notes: "",
-    needsTransfer: false,
-  };
-}
+const defaultEmptyDraft = {
+  customerName: "",
+  customerPhone: "",
+  customerEmail: "",
+  travelersCount: "1",
+  needsTransfer: false,
+  notes: "",
+};
 
 export default function BookingPage({
   title = "Оформлення заявки",
   tour,
-  initialDraft,
-  onClearSelection,
+  initialDraft = defaultEmptyDraft,
+  onSave,
   onCancel,
+  submitLabel = "Зберегти заявку",
   cancelLabel = "Вийти без збереження",
 }) {
-  const [draft, setDraft] = useState(
-    () => initialDraft || createEmptyDraft()
-  );
-
-  useEffect(() => {
-    const previousTitle = document.title;
-
-    document.title = title;
-
-    return () => {
-      document.title = previousTitle;
-    };
-  }, [title]);
-
-  const handleCustomerNameChange = (customerName) => {
-    setDraft((prev) => ({
-      ...prev,
-      customerName,
-    }));
+  const initialValues = {
+    customerName: initialDraft.customerName ?? "",
+    customerPhone: initialDraft.customerPhone ?? "",
+    customerEmail: initialDraft.customerEmail ?? "",
+    travelersCount: String(initialDraft.travelersCount ?? "1"),
+    needsTransfer: Boolean(initialDraft.needsTransfer),
+    notes: initialDraft.notes ?? "",
   };
 
-  const handlePhoneChange = (customerPhone) => {
-    setDraft((prev) => ({
-      ...prev,
-      customerPhone,
-    }));
-  };
+  const [draft, setDraft] = useState(() => ({
+    ...initialValues,
+  }));
 
-  const handleEmailChange = (customerEmail) => {
-    setDraft((prev) => ({
-      ...prev,
-      customerEmail,
-    }));
-  };
-
-  const handleNotesChange = (notes) => {
-    setDraft((prev) => ({
-      ...prev,
-      notes,
-    }));
-  };
-
-  const handleNeedsTransferChange = (needsTransfer) => {
-    setDraft((prev) => ({
-      ...prev,
-      needsTransfer,
-    }));
-  };
-
-  const handleReset = () => {
-    setDraft(createEmptyDraft());
-  };
+  const [touched, setTouched] = useState({});
+  const [attempted, setAttempted] = useState(false);
+  const [operationError, setOperationError] = useState("");
 
   if (!tour) {
     return (
@@ -93,49 +60,146 @@ export default function BookingPage({
     );
   }
 
+  const validation = validateBooking(
+    { ...draft, tourId: tour.id },
+    [tour]
+  );
+
+  const errors = Object.fromEntries(
+    Object.entries(validation.errors).filter(
+      ([field]) => attempted || touched[field]
+    )
+  );
+
+  const isDirty =
+    draft.customerName !== initialValues.customerName ||
+    draft.customerPhone !== initialValues.customerPhone ||
+    draft.customerEmail !== initialValues.customerEmail ||
+    draft.travelersCount !== initialValues.travelersCount ||
+    draft.needsTransfer !== initialValues.needsTransfer ||
+    draft.notes !== initialValues.notes;
+
+  function handleChange(field, value) {
+    setDraft((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+
+    setOperationError("");
+  }
+
+  function handleBlur(field) {
+    setTouched((prev) => ({
+      ...prev,
+      [field]: true,
+    }));
+  }
+
+  function handleSubmit(event) {
+    event.preventDefault();
+
+    setAttempted(true);
+    setOperationError("");
+
+    if (!validation.ok) {
+      const firstField = [
+        "customerName",
+        "customerPhone",
+        "customerEmail",
+        "travelersCount",
+        "needsTransfer",
+        "notes",
+      ].find((field) => validation.errors[field]);
+
+      if (firstField) {
+        event.currentTarget.elements
+          .namedItem(firstField)
+          ?.focus();
+      }
+
+      return;
+    }
+
+    const result = onSave(validation.value);
+
+    if (!result.ok) {
+      setOperationError(
+        result.message ||
+          Object.values(result.errors || {}).join(" ")
+      );
+    }
+  }
+
+  function handleReset() {
+    if (!isDirty) return;
+
+    if (
+      !window.confirm(
+        "Відкинути всі введені зміни та повернути початкові значення?"
+      )
+    ) {
+      return;
+    }
+
+    setDraft({
+      ...initialValues,
+    });
+
+    setTouched({});
+    setAttempted(false);
+    setOperationError("");
+  }
+
+  function handleCancel() {
+    if (
+      isDirty &&
+      !window.confirm(
+        "Вийти та відкинути незбережені зміни?"
+      )
+    ) {
+      return;
+    }
+
+    onCancel();
+  }
+
   return (
-    <Section id="booking" title={title}>
-      <div className="booking-page-content">
-        <BookingForm
-          idPrefix="booking-draft"
-          tourName={tour.name}
-          isAvailable={tour.isAvailable}
-          draft={draft}
-          onCustomerNameChange={handleCustomerNameChange}
-          onPhoneChange={handlePhoneChange}
-          onEmailChange={handleEmailChange}
-          onNotesChange={handleNotesChange}
-          onNeedsTransferChange={handleNeedsTransferChange}
-          onReset={handleReset}
-        />
+    <div className="booking-editor container">
+      <PageHeading title={`${title}: ${tour.name}`} />
 
-        <BookingSummary
-          tourName={tour.name}
-          draft={draft}
-        />
+      <Section
+        id="booking"
+        title="Параметри заявки та підсумок"
+      >
+        <div className="booking-page-content">
+          <BookingForm
+            idPrefix="booking-draft"
+            tourName={tour.name}
+            draft={draft}
+            errors={errors}
+            operationError={operationError}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            onSubmit={handleSubmit}
+            onReset={handleReset}
+            submitLabel={submitLabel}
+          />
 
-        {onClearSelection && (
+          <BookingSummary
+            tourName={tour.name}
+            draft={draft}
+          />
+
           <div className="booking-page-action">
             <AppButton
               variant="secondary"
-              onClick={onClearSelection}
-            >
-              Скасувати вибір туру та скинути чернетку
-            </AppButton>
-          </div>
-        )}
-
-        {onCancel && (
-          <div className="booking-page-action">
-            <AppButton
-              variant="secondary"
-              onClick={onCancel}
+              onClick={handleCancel}
             >
               {cancelLabel}
             </AppButton>
           </div>
-        )}
-      </div>
-    </Section>
+        </div>
+      </Section>
+    </div>
   );
 }

@@ -1,17 +1,23 @@
 import { Link, useNavigate, useSearchParams } from "react-router";
 
+import PageHeading from "../../components/ui/PageHeading";
 import EmptyState from "../../components/ui/EmptyState";
 import AppButton from "../../components/ui/AppButton";
+
 import useTourSelection from "../../hooks/useTourSelection";
+import useBookings from "../../hooks/useBookings";
+
 import BookingPage from "../BookingPage/BookingPage";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
-import PageHeading from "../../components/ui/PageHeading";
+
 import "./BookingCreatePage.css";
 
-export default function BookingCreatePage({ items }) {
+export default function BookingCreatePage({ items = [] }) {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+
   const { selectedId, clearSelection } = useTourSelection();
+  const { createBooking } = useBookings();
 
   const tourId = searchParams.get("tourId");
 
@@ -22,11 +28,11 @@ export default function BookingCreatePage({ items }) {
 
     return (
       <>
-        <PageHeading title="Нова заявка" />
+        <PageHeading title="Нова заявка на тур" />
 
-        <EmptyState title="Тур не вибрано">
+        <EmptyState title="Спочатку оберіть тур із каталогу">
           <p>
-            Оберіть тур із каталогу для початку оформлення заявки.
+            Для формування заявки необхідно обрати напрямок подорожі.
           </p>
 
           <div className="booking-create-actions">
@@ -49,15 +55,30 @@ export default function BookingCreatePage({ items }) {
     );
   }
 
-const tour = items.find((entry) => String(entry.id) === String(tourId));
+  const tour = items.find(
+    (entry) => String(entry.id) === String(tourId)
+  );
 
   if (!tour) {
     return (
       <NotFoundPage
         title="Тур не знайдено"
-        message={`Тур з ідентифікатором «${tourId}» відсутній у каталозі.`}
+        message={`Тур з ідентифікатором «${tourId}» відсутній у поточному каталозі.`}
       />
     );
+  }
+
+  function handleSave(input) {
+    const result = createBooking(input);
+
+    if (result.ok) {
+      navigate(
+        `/bookings/${encodeURIComponent(result.record.id)}`,
+        { replace: true }
+      );
+    }
+
+    return result;
   }
 
   function handleCancel() {
@@ -70,6 +91,8 @@ const tour = items.find((entry) => String(entry.id) === String(tourId));
       key={`new-${tour.id}`}
       title="Нова заявка"
       tour={tour}
+      onSave={handleSave}
+      submitLabel="Створити заявку"
       onCancel={handleCancel}
       cancelLabel="Скасувати та перейти до каталогу"
     />

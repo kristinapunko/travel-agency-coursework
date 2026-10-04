@@ -1,0 +1,28 @@
+.bookings-section .requests-table {
+    min-width: 0;
+  }
+  
+  .bookings-section .requests-table th {
+    width: 220px;
+  }
+  
+  .bookings-section .requests-table td {
+    background-color: #ffffff;
+  }
+  
+  @media (max-width: 640px) {
+    .bookings-section .requests-table th,
+    .bookings-section .requests-table td {
+      display: block;
+      width: 100%;
+      box-sizing: border-box;
+    }
+  
+    .bookings-section .requests-table th {
+      padding-bottom: 0.4rem;
+    }
+  
+    .bookings-section .requests-table td {
+      padding-top: 0.4rem;
+    }
+  }

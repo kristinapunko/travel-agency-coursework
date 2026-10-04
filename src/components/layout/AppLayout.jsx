@@ -3,6 +3,7 @@ import Header from "./Header/Header";
 import Footer from "./Footer/Footer";
 import TourSelectionProvider from "../../providers/TourSelectionProvider";
 import "./AppLayout.css";
+import BookingsProvider from "../../providers/BookingsProvider";
 
 const navigationLinks = [
   { to: "/", label: "Головна", end: true },
@@ -21,7 +22,9 @@ export default function AppLayout({ title, items }) {
 
       <main id="main-content" className="site-main">
         <TourSelectionProvider items={items}>
+          <BookingsProvider items={items}>
           <Outlet />
+          </BookingsProvider>
         </TourSelectionProvider>
       </main>
 

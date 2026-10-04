@@ -1,6 +1,7 @@
 import { NavLink, Outlet } from "react-router";
 
 import "./BookingsLayout.css";
+import BookingNotice from "../../bookings/BookingNotice";
 
 export default function BookingsLayout() {
   return (
@@ -35,6 +36,7 @@ export default function BookingsLayout() {
       </div>
 
       <main className="bookings-content">
+        <BookingNotice />
         <Outlet />
       </main>
     </div>

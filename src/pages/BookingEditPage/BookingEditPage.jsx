@@ -1,11 +1,14 @@
 import { useNavigate, useParams } from "react-router";
 
+import useBookings from "../../hooks/useBookings.js";
 import BookingPage from "../BookingPage/BookingPage";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
 
-export default function BookingEditPage({ bookings = [], items = [] }) {
+export default function BookingEditPage({ items = [] }) {
   const { bookingId } = useParams();
   const navigate = useNavigate();
+
+  const { bookings, updateBooking } = useBookings();
 
   const booking = bookings.find(
     (entry) => String(entry.id) === String(bookingId)
@@ -15,20 +18,35 @@ export default function BookingEditPage({ bookings = [], items = [] }) {
     return (
       <NotFoundPage
         title="Заявку не знайдено"
-        message={`Заявку «${bookingId}» не знайдено серед збережених записів.`}
+        message={`Заявку «${bookingId}» для редагування не знайдено.`}
       />
     );
   }
 
-  const tour = items.find((entry) => String(entry.id) === String(booking.tourId));
+  const tour = items.find(
+    (entry) => String(entry.id) === String(booking.tourId)
+  );
 
   if (!tour) {
     return (
       <NotFoundPage
         title="Тур не знайдено"
-        message="Предмет цієї заявки відсутній у каталозі."
+        message="Тур, пов'язаний із цією заявкою, відсутній у каталозі."
       />
     );
+  }
+
+  function handleSave(input) {
+    const result = updateBooking(booking.id, input);
+
+    if (result.ok) {
+      navigate(
+        `/bookings/${encodeURIComponent(result.record.id)}`,
+        { replace: true }
+      );
+    }
+
+    return result;
   }
 
   return (
@@ -40,11 +58,16 @@ export default function BookingEditPage({ bookings = [], items = [] }) {
         customerName: booking.customerName || "",
         customerPhone: booking.customerPhone || "",
         customerEmail: booking.customerEmail || "",
-        notes: booking.notes || "",
+        travelersCount: booking.travelersCount || "1",
         needsTransfer: Boolean(booking.needsTransfer),
+        notes: booking.notes || "",
       }}
-      onCancel={() => navigate("/bookings")}
-      cancelLabel="Повернутися до списку заявок"
+      onSave={handleSave}
+      submitLabel="Зберегти зміни"
+      onCancel={() =>
+        navigate(`/bookings/${encodeURIComponent(booking.id)}`)
+      }
+      cancelLabel="Скасувати редагування"
     />
   );
 }

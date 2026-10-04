@@ -1,27 +1,88 @@
+import { useState } from "react";
 import { Link } from "react-router";
+
 import PageHeading from "../../components/ui/PageHeading";
 import EmptyState from "../../components/ui/EmptyState";
 import AppButton from "../../components/ui/AppButton";
+import BookingFilters from "../../components/bookings/BookingFilters/BookingFilters";
+import BookingTable from "../../components/bookings/BookingTable/BookingTable";
+import useBookings from "../../hooks/useBookings";
+import useBookingFilters from "../../hooks/useBookingFilters";
+import useDeleteBooking from "../../hooks/useDeleteBooking";
 
 import "./BookingsPage.css";
 
-export default function BookingsPage({ bookings, items }) {
+export default function BookingsPage({ items = [] }) {
+  const { bookings } = useBookings();
+
+  const filters = useBookingFilters(bookings, items);
+
+  const deleteWithConfirmation = useDeleteBooking(items);
+
+  const [error, setError] = useState("");
+
+  function handleDelete(booking) {
+    setError("");
+
+    const result = deleteWithConfirmation(booking);
+
+    if (!result.ok && !result.cancelled) {
+      setError(result.message);
+    }
+  }
+
   return (
     <div className="bookings-page">
-      <PageHeading title="Список заявок" />
+      <PageHeading title="Список заявок на тури" />
 
       <p className="bookings-page-description">
         Нижче наведено локальні демонстраційні записи ваших заявок.
       </p>
 
+      <BookingFilters
+        query={filters.query}
+        transfer={filters.transfer}
+        sort={filters.sort}
+        onQueryChange={filters.setQuery}
+        onTransferChange={filters.setTransfer}
+        onSortChange={filters.setSort}
+        onReset={filters.resetFilters}
+      />
+
+      <p className="bookings-page-description">
+        Показано заявок:{" "}
+        <strong>{filters.visibleBookings.length}</strong> із{" "}
+        <strong>{bookings.length}</strong>
+      </p>
+
+      {error && (
+        <p
+          className="booking-operation-error"
+          role="alert"
+        >
+          {error}
+        </p>
+      )}
+
       {bookings.length === 0 ? (
         <div className="bookings-empty">
-          <EmptyState title="Немає збережених заявок">
-            <Link to="new">
+          <EmptyState title="Заявок ще немає">
+            <Link to="/tours">
               <AppButton variant="primary">
-                Підготувати нову заявку
+                Обрати тур у каталозі для першої заявки
               </AppButton>
             </Link>
+          </EmptyState>
+        </div>
+      ) : filters.visibleBookings.length === 0 ? (
+        <div className="bookings-empty">
+          <EmptyState title="За цими критеріями заявок не знайдено">
+            <AppButton
+              variant="secondary"
+              onClick={filters.resetFilters}
+            >
+              Показати всі заявки
+            </AppButton>
           </EmptyState>
         </div>
       ) : (
@@ -31,88 +92,22 @@ export default function BookingsPage({ bookings, items }) {
               <h2>Мої заявки</h2>
               <p>
                 Кількість заявок:{" "}
-                <strong>{bookings.length}</strong>
+                <strong>{filters.visibleBookings.length}</strong>
               </p>
             </div>
 
-            <Link to="new">
+            <Link to="/bookings/new">
               <AppButton variant="primary">
                 + Нова заявка
               </AppButton>
             </Link>
           </div>
 
-          <div className="table-scroll">
-            <table className="requests-table">
-              <thead>
-                <tr>
-                  <th>№</th>
-                  <th>Тур</th>
-                  <th>Клієнт</th>
-                  <th>Трансфер</th>
-                  <th>Дія</th>
-                </tr>
-              </thead>
-
-              <tbody>
-                {bookings.map((booking) => {
-                  const tour = items.find(
-                    (item) => item.id === booking.tourId
-                  );
-
-                  return (
-                    <tr key={booking.id}>
-                      <td>
-                        <strong>{booking.id}</strong>
-                      </td>
-
-                      <td>
-                        <div className="booking-tour">
-                          <span className="booking-tour-name">
-                            {tour?.name ?? "Тур видалено"}
-                          </span>
-
-                          {tour && (
-                            <span className="booking-tour-country">
-                              {tour.country}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      <td>
-                        <div className="booking-customer">
-                          <strong>{booking.customerName}</strong>
-                          <span>{booking.customerPhone}</span>
-                          <span>{booking.customerEmail}</span>
-                        </div>
-                      </td>
-
-                      <td>
-                        <span
-                          className={
-                            booking.needsTransfer
-                              ? "transfer-badge transfer-yes"
-                              : "transfer-badge transfer-no"
-                          }
-                        >
-                          {booking.needsTransfer ? "Так" : "Ні"}
-                        </span>
-                      </td>
-
-                      <td>
-                        <Link to={`${booking.id}/edit`}>
-                          <AppButton variant="secondary">
-                            Редагувати
-                          </AppButton>
-                        </Link>
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+          <BookingTable
+            bookings={filters.visibleBookings}
+            items={items}
+            onDelete={handleDelete}
+          />
         </section>
       )}
     </div>

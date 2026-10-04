@@ -1,53 +1,60 @@
-import AppButton from "../../ui/AppButton";
-import FormField from "../../ui/FormField";
-import AvailabilityBadge from "../../tours/AvailabilityBadge/AvailabilityBadge";
+import FormField from "../../ui/FormField.jsx";
+import AppButton from "../../ui/AppButton.jsx";
+
 import "./BookingForm.css";
 
 export default function BookingForm({
   idPrefix,
   tourName,
-  isAvailable,
   draft,
-  onCustomerNameChange,
-  onPhoneChange,
-  onEmailChange,
-  onNotesChange,
-  onNeedsTransferChange,
+  errors = {},
+  operationError,
+  onChange,
+  onBlur,
+  onSubmit,
   onReset,
+  submitLabel = "Зберегти заявку",
 }) {
   const titleId = `${idPrefix}-title`;
   const noticeId = `${idPrefix}-notice`;
-  const tourId = `${idPrefix}-tour`;
-  const nameId = `${idPrefix}-customer-name`;
-  const phoneId = `${idPrefix}-customer-phone`;
-  const emailId = `${idPrefix}-customer-email`;
+
+  const nameId = `${idPrefix}-name`;
+  const phoneId = `${idPrefix}-phone`;
+  const emailId = `${idPrefix}-email`;
+  const countId = `${idPrefix}-count`;
+  const transferId = `${idPrefix}-transfer`;
   const notesId = `${idPrefix}-notes`;
+
+  function describedBy(id, error) {
+    return `${id}-hint${error ? ` ${id}-error` : ""}`;
+  }
 
   return (
     <form
       className="booking-form"
+      noValidate
+      onSubmit={onSubmit}
       aria-labelledby={titleId}
       aria-describedby={noticeId}
-      onSubmit={(event) => event.preventDefault()}
-      noValidate
     >
       <h3 id={titleId} className="booking-form__title">
         Заявка на бронювання
       </h3>
 
       <p id={noticeId} className="booking-form__notice">
-        Чернетка зберігається лише до зміни туру або перезавантаження сторінки. Наразі надсилання заблоковано.
+        Збережіть зміни кнопкою нижче. Незбережене введення скидається при
+        виході.
       </p>
 
       <div className="tour-field-wrapper">
         <div className="tour-field-header">
-          <label htmlFor={tourId} className="form-field-label">
+          <label className="form-field-label">
             Обраний тур:
           </label>
-          <AvailabilityBadge available={Boolean(isAvailable)} />
         </div>
+
         <input
-          id={tourId}
+          id={`${idPrefix}-tour`}
           name="tourName"
           className="form-input tour-readonly-input"
           value={tourName}
@@ -55,7 +62,35 @@ export default function BookingForm({
         />
       </div>
 
-      <FormField id={nameId} label="Ваше ім'я та прізвище">
+      {Object.keys(errors).length > 0 && (
+        <p
+          role="alert"
+          style={{
+            color: "#dc2626",
+            fontWeight: "bold",
+          }}
+        >
+          Будь ласка, виправте виділені поля.
+        </p>
+      )}
+
+      {operationError && (
+        <p
+          role="alert"
+          style={{
+            color: "#dc2626",
+          }}
+        >
+          {operationError}
+        </p>
+      )}
+
+      <FormField
+        id={nameId}
+        label="Прізвище та ім'я (обов'язково)"
+        hint="Від 3 до 60 символів."
+        error={errors.customerName}
+      >
         <input
           id={nameId}
           name="customerName"
@@ -63,15 +98,19 @@ export default function BookingForm({
           className="form-input"
           autoComplete="name"
           value={draft.customerName}
-          onChange={(e) => onCustomerNameChange(e.target.value)}
+          onChange={(e) => onChange("customerName", e.target.value)}
+          onBlur={() => onBlur("customerName")}
+          aria-invalid={Boolean(errors.customerName)}
+          aria-describedby={describedBy(nameId, errors.customerName)}
           placeholder="Тарас Шевченко"
         />
       </FormField>
 
       <FormField
         id={phoneId}
-        label="Контактний телефон"
-        hint="Формат: +380 (XX) XXX-XX-XX"
+        label="Номер телефону (обов'язково)"
+        hint="Формат: +380XXXXXXXXX"
+        error={errors.customerPhone}
       >
         <input
           id={phoneId}
@@ -80,16 +119,19 @@ export default function BookingForm({
           className="form-input"
           autoComplete="tel"
           value={draft.customerPhone}
-          onChange={(e) => onPhoneChange(e.target.value)}
-          aria-describedby={`${phoneId}-hint`}
+          onChange={(e) => onChange("customerPhone", e.target.value)}
+          onBlur={() => onBlur("customerPhone")}
+          aria-invalid={Boolean(errors.customerPhone)}
+          aria-describedby={describedBy(phoneId, errors.customerPhone)}
           placeholder="+380 50 123 45 67"
         />
       </FormField>
 
       <FormField
         id={emailId}
-        label="Електронна пошта"
-        hint="Наприклад: example@gmail.com"
+        label="Електронна пошта (обов'язково)"
+        hint="name@example.com"
+        error={errors.customerEmail}
       >
         <input
           id={emailId}
@@ -98,16 +140,91 @@ export default function BookingForm({
           className="form-input"
           autoComplete="email"
           value={draft.customerEmail}
-          onChange={(e) => onEmailChange(e.target.value)}
-          aria-describedby={`${emailId}-hint`}
+          onChange={(e) => onChange("customerEmail", e.target.value)}
+          onBlur={() => onBlur("customerEmail")}
+          aria-invalid={Boolean(errors.customerEmail)}
+          aria-describedby={describedBy(emailId, errors.customerEmail)}
           placeholder="your.email@example.com"
         />
       </FormField>
 
       <FormField
+        id={countId}
+        label="Кількість осіб (обов'язково)"
+        hint="Ціле число від 1 до 10."
+        error={errors.travelersCount}
+      >
+        <input
+          id={countId}
+          name="travelersCount"
+          type="number"
+          min={1}
+          max={10}
+          step={1}
+          className="form-input"
+          value={draft.travelersCount}
+          onChange={(e) => onChange("travelersCount", e.target.value)}
+          onBlur={() => onBlur("travelersCount")}
+          aria-invalid={Boolean(errors.travelersCount)}
+          aria-describedby={describedBy(countId, errors.travelersCount)}
+        />
+      </FormField>
+
+      <div
+        className="checkbox-field"
+        style={{ margin: "14px 0" }}
+      >
+        <label
+          htmlFor={transferId}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            cursor: "pointer",
+          }}
+        >
+          <input
+            id={transferId}
+            name="needsTransfer"
+            type="checkbox"
+            checked={Boolean(draft.needsTransfer)}
+            onChange={(e) => onChange("needsTransfer", e.target.checked)}
+            onBlur={() => onBlur("needsTransfer")}
+            aria-invalid={Boolean(errors.needsTransfer)}
+            aria-describedby={describedBy(
+              transferId,
+              errors.needsTransfer
+            )}
+          />
+
+          <span>
+            Потрібен груповий або індивідуальний трансфер
+          </span>
+        </label>
+
+        <p
+          id={`${transferId}-hint`}
+          className="field-hint"
+        >
+          Для груп понад 4 особи трансфер є обов'язковим.
+        </p>
+
+        {errors.needsTransfer && (
+          <p
+            id={`${transferId}-error`}
+            className="field-error"
+            style={{ color: "#dc2626" }}
+          >
+            {errors.needsTransfer}
+          </p>
+        )}
+      </div>
+
+      <FormField
         id={notesId}
-        label="Особливі побажання"
-        hint="Додаткові вимоги до готелю чи харчування"
+        label="Додаткові побажання"
+        hint="Не більше 300 символів."
+        error={errors.notes}
       >
         <textarea
           id={notesId}
@@ -115,28 +232,28 @@ export default function BookingForm({
           rows={3}
           className="form-input form-textarea"
           value={draft.notes}
-          onChange={(e) => onNotesChange(e.target.value)}
-          aria-describedby={`${notesId}-hint`}
+          onChange={(e) => onChange("notes", e.target.value)}
+          onBlur={() => onBlur("notes")}
+          aria-invalid={Boolean(errors.notes)}
+          aria-describedby={describedBy(notesId, errors.notes)}
           placeholder="Номер з видом на море, вегетаріанське меню..."
         />
       </FormField>
 
-      <label className="checkbox-field" style={{ margin: "14px 0" }}>
-        <input
-          type="checkbox"
-          checked={draft.needsTransfer}
-          onChange={(e) => onNeedsTransferChange(e.target.checked)}
-        />
-        <span>Потрібен індивідуальний трансфер з аеропорту</span>
-      </label>
-
       <div className="form-actions">
-        <AppButton type="button" variant="secondary" onClick={onReset}>
-          Очистити поля чернетки
+        <AppButton
+          type="submit"
+          variant="primary"
+        >
+          {submitLabel}
         </AppButton>
 
-        <AppButton type="button" disabled>
-          Підтвердити бронювання (буде в Л 2.2)
+        <AppButton
+          type="button"
+          variant="secondary"
+          onClick={onReset}
+        >
+          Відновити поля
         </AppButton>
       </div>
     </form>
