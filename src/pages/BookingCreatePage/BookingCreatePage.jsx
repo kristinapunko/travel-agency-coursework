@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router";
 
 import PageHeading from "../../components/ui/PageHeading";
@@ -18,6 +19,16 @@ export default function BookingCreatePage({ items = [] }) {
 
   const { selectedId, clearSelection } = useTourSelection();
   const { createBooking } = useBookings();
+
+  const pageAlive = useRef(false);
+
+  useEffect(() => {
+    pageAlive.current = true;
+
+    return () => {
+      pageAlive.current = false;
+    };
+  }, []);
 
   const tourId = searchParams.get("tourId");
 
@@ -68,10 +79,10 @@ export default function BookingCreatePage({ items = [] }) {
     );
   }
 
-  function handleSave(input) {
-    const result = createBooking(input);
+  async function handleSave(input) {
+    const result = await createBooking(input);
 
-    if (result.ok) {
+    if (result.ok && pageAlive.current) {
       navigate(
         `/bookings/${encodeURIComponent(result.record.id)}`,
         { replace: true }

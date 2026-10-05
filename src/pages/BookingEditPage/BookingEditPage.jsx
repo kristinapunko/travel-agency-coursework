@@ -1,6 +1,8 @@
+import { useEffect, useRef } from "react";
 import { useNavigate, useParams } from "react-router";
 
 import useBookings from "../../hooks/useBookings.js";
+
 import BookingPage from "../BookingPage/BookingPage";
 import NotFoundPage from "../NotFoundPage/NotFoundPage";
 
@@ -9,6 +11,19 @@ export default function BookingEditPage({ items = [] }) {
   const navigate = useNavigate();
 
   const { bookings, updateBooking } = useBookings();
+
+  const pageAlive = useRef(false);
+  const activeId = useRef(bookingId);
+
+  useEffect(() => {
+    pageAlive.current = true;
+    activeId.current = bookingId;
+
+    return () => {
+      pageAlive.current = false;
+      activeId.current = null;
+    };
+  }, [bookingId]);
 
   const booking = bookings.find(
     (entry) => String(entry.id) === String(bookingId)
@@ -36,10 +51,14 @@ export default function BookingEditPage({ items = [] }) {
     );
   }
 
-  function handleSave(input) {
-    const result = updateBooking(booking.id, input);
+  async function handleSave(input) {
+    const result = await updateBooking(booking.id, input);
 
-    if (result.ok) {
+    if (
+      result.ok &&
+      pageAlive.current &&
+      activeId.current === booking.id
+    ) {
       navigate(
         `/bookings/${encodeURIComponent(result.record.id)}`,
         { replace: true }
@@ -65,7 +84,9 @@ export default function BookingEditPage({ items = [] }) {
       onSave={handleSave}
       submitLabel="Зберегти зміни"
       onCancel={() =>
-        navigate(`/bookings/${encodeURIComponent(booking.id)}`)
+        navigate(
+          `/bookings/${encodeURIComponent(booking.id)}`
+        )
       }
       cancelLabel="Скасувати редагування"
     />

@@ -1,22 +1,30 @@
 import { useState } from "react";
+
 import { Link } from "react-router";
 
 import PageHeading from "../../components/ui/PageHeading";
 import EmptyState from "../../components/ui/EmptyState";
 import AppButton from "../../components/ui/AppButton";
+
 import BookingFilters from "../../components/bookings/BookingFilters/BookingFilters";
 import BookingTable from "../../components/bookings/BookingTable/BookingTable";
+
 import useBookings from "../../hooks/useBookings";
 import useBookingFilters from "../../hooks/useBookingFilters";
 import useDeleteBooking from "../../hooks/useDeleteBooking";
 
+import { failNextMockBooking } from "../../services/mockBookingService.js";
+
 import "./BookingsPage.css";
 
 export default function BookingsPage({ items = [] }) {
-  const { bookings } = useBookings();
+  const {
+    bookings,
+    reload,
+    isMutating,
+  } = useBookings();
 
   const filters = useBookingFilters(bookings, items);
-
   const deleteWithConfirmation = useDeleteBooking(items);
 
   const [error, setError] = useState("");
@@ -31,6 +39,11 @@ export default function BookingsPage({ items = [] }) {
     }
   }
 
+  function handleReadFailureTest() {
+    failNextMockBooking("getAll");
+    void reload();
+  }
+
   return (
     <div className="bookings-page">
       <PageHeading title="Список заявок на тури" />
@@ -38,6 +51,27 @@ export default function BookingsPage({ items = [] }) {
       <p className="bookings-page-description">
         Нижче наведено локальні демонстраційні записи ваших заявок.
       </p>
+
+      <div className="bookings-page-actions">
+        <AppButton
+          variant="secondary"
+          onClick={() => void reload()}
+          disabled={isMutating}
+        >
+          Оновити дані
+        </AppButton>
+
+        {import.meta.env.DEV &&
+          import.meta.env.VITE_DATA_SOURCE === "mock" && (
+            <AppButton
+              variant="secondary"
+              onClick={handleReadFailureTest}
+              disabled={isMutating}
+            >
+              Перевірити відмову читання
+            </AppButton>
+          )}
+      </div>
 
       <BookingFilters
         query={filters.query}

@@ -8,6 +8,13 @@
   line-height: 1.6;
 }
 
+.bookings-page-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem;
+}
+
 .bookings-empty {
   margin-top: 2rem;
   padding: 2rem;

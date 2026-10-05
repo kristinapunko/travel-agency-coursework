@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import PageHeading from "../../components/ui/PageHeading";
 import Section from "../../components/ui/Section";
@@ -6,7 +6,7 @@ import EmptyState from "../../components/ui/EmptyState";
 import AppButton from "../../components/ui/AppButton";
 import BookingForm from "../../components/bookings/BookingForm/BookingForm";
 import BookingSummary from "../../components/bookings/BookingSummary/BookingSummary";
-
+import { failNextMockBooking } from "../../services/mockBookingService.js";
 import { validateBooking } from "../../domain/bookingValidation.js";
 
 import "./BookingPage.css";
@@ -29,6 +29,7 @@ export default function BookingPage({
   submitLabel = "Зберегти заявку",
   cancelLabel = "Вийти без збереження",
 }) {
+
   const initialValues = {
     customerName: initialDraft.customerName ?? "",
     customerPhone: initialDraft.customerPhone ?? "",
@@ -45,6 +46,18 @@ export default function BookingPage({
   const [touched, setTouched] = useState({});
   const [attempted, setAttempted] = useState(false);
   const [operationError, setOperationError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const submitting = useRef(false);
+  const alive = useRef(false);
+
+  useEffect(() => {
+    alive.current = true;
+
+    return () => {
+      alive.current = false;
+    };
+  }, []);
 
   if (!tour) {
     return (
@@ -95,8 +108,10 @@ export default function BookingPage({
     }));
   }
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
+
+    if (submitting.current) return;
 
     setAttempted(true);
     setOperationError("");
@@ -120,18 +135,34 @@ export default function BookingPage({
       return;
     }
 
-    const result = onSave(validation.value);
+    submitting.current = true;
+    setIsSubmitting(true);
 
-    if (!result.ok) {
-      setOperationError(
-        result.message ||
-          Object.values(result.errors || {}).join(" ")
-      );
+    try {
+      const result = await onSave(validation.value);
+
+      if (!result.ok && alive.current) {
+        setOperationError(
+          result.errors
+            ? Object.values(result.errors).join(" ")
+            : result.message || "Не вдалося зберегти заявку."
+        );
+      }
+    } catch {
+      if (alive.current) {
+        setOperationError("Не вдалося завершити збереження.");
+      }
+    } finally {
+      submitting.current = false;
+
+      if (alive.current) {
+        setIsSubmitting(false);
+      }
     }
   }
 
   function handleReset() {
-    if (!isDirty) return;
+    if (isSubmitting || !isDirty) return;
 
     if (
       !window.confirm(
@@ -151,6 +182,8 @@ export default function BookingPage({
   }
 
   function handleCancel() {
+    if (isSubmitting) return;
+
     if (
       isDirty &&
       !window.confirm(
@@ -171,6 +204,20 @@ export default function BookingPage({
         id="booking"
         title="Параметри заявки та підсумок"
       >
+        {import.meta.env.DEV && import.meta.env.VITE_DATA_SOURCE === "mock" && (
+  <div style={{ marginBottom: "1rem" }}>
+    <AppButton
+      type="button"
+      variant="secondary"
+      onClick={() => {
+        failNextMockBooking("create");
+        alert("Заплановано відмову для наступної операції create!");
+      }}
+    >
+      Зімітувати відмову створення (DEV)
+    </AppButton>
+  </div>
+)}
         <div className="booking-page-content">
           <BookingForm
             idPrefix="booking-draft"
@@ -182,7 +229,10 @@ export default function BookingPage({
             onBlur={handleBlur}
             onSubmit={handleSubmit}
             onReset={handleReset}
-            submitLabel={submitLabel}
+            submitLabel={
+              isSubmitting ? "Збереження…" : submitLabel
+            }
+            isSubmitting={isSubmitting}
           />
 
           <BookingSummary
@@ -194,6 +244,7 @@ export default function BookingPage({
             <AppButton
               variant="secondary"
               onClick={handleCancel}
+              disabled={isSubmitting}
             >
               {cancelLabel}
             </AppButton>

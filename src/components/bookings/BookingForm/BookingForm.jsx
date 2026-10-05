@@ -9,6 +9,7 @@ export default function BookingForm({
   draft,
   errors = {},
   operationError,
+  isSubmitting = false,
   onChange,
   onBlur,
   onSubmit,
@@ -37,6 +38,8 @@ export default function BookingForm({
       aria-labelledby={titleId}
       aria-describedby={noticeId}
     >
+      <fieldset disabled={isSubmitting} style={{ border: 'none', padding: 0, margin: 0 }}>
+      <legend className="sr-only">Дані заявки</legend>
       <h3 id={titleId} className="booking-form__title">
         Заявка на бронювання
       </h3>
@@ -256,6 +259,7 @@ export default function BookingForm({
           Відновити поля
         </AppButton>
       </div>
+      </fieldset>
     </form>
   );
 }

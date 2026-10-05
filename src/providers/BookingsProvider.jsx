@@ -1,74 +1,179 @@
-import { useState } from "react";
-import { BookingsContext } from "../context/BookingsContext.js";
-import { bookings as initialBookings } from "../data/bookings.js";
-import { validateBooking } from "../domain/bookingValidation.js";
+import { useCallback, useEffect, useRef, useState } from 'react';
 
-export default function BookingsProvider({ items, children }) {
-  const [bookings, setBookings] = useState(() =>
-    initialBookings.map((b) => ({ ...b }))
-  );
-  const [notice, setNotice] = useState("");
+import { BookingsContext } from '../context/BookingsContext.js';
+import { bookingService } from '../services/bookingService.js';
+import { errorMessage } from '../services/ServiceError.js';
+
+export default function BookingsProvider({ children }) {
+  const [bookings, setBookings] = useState([]);
+  const [status, setStatus] = useState('loading'); // 'loading' | 'success' | 'error'
+  const [error, setError] = useState('');
+  const [notice, setNotice] = useState('');
+  const [isMutating, setIsMutating] = useState(false);
+
+  const activeRead = useRef(null);
+  const readVersion = useRef(0);
+  const mutationLock = useRef(false);
+  const mounted = useRef(false);
+
+  const reload = useCallback(async () => {
+    if (mutationLock.current) return;
+
+    activeRead.current?.abort();
+
+    const controller = new AbortController();
+    activeRead.current = controller;
+
+    const version = ++readVersion.current;
+
+    setStatus('loading');
+    setError('');
+
+    try {
+      const records = await bookingService.getAll({
+        signal: controller.signal,
+      });
+
+      if (controller.signal.aborted || version !== readVersion.current) {
+        return;
+      }
+
+      setBookings(records);
+      setStatus('success');
+    } catch (cause) {
+      if (controller.signal.aborted || version !== readVersion.current) {
+        return;
+      }
+
+      setError(errorMessage(cause));
+      setStatus('error');
+    }
+  }, []);
+
+  useEffect(() => {
+    mounted.current = true;
+
+    const controller = new AbortController();
+    activeRead.current = controller;
+
+    const version = ++readVersion.current;
+
+    async function loadInitialBookings() {
+      try {
+        const records = await bookingService.getAll({
+          signal: controller.signal,
+        });
+
+        if (controller.signal.aborted || version !== readVersion.current) {
+          return;
+        }
+
+        setBookings(records);
+        setStatus('success');
+        setError('');
+      } catch (cause) {
+        if (controller.signal.aborted || version !== readVersion.current) {
+          return;
+        }
+
+        setError(errorMessage(cause));
+        setStatus('error');
+      }
+    }
+
+    void loadInitialBookings();
+
+    return () => {
+      mounted.current = false;
+      controller.abort();
+      readVersion.current += 1;
+    };
+  }, []);
+
+  async function mutate(operation, apply, message) {
+    if (mutationLock.current || status !== 'success') {
+      return {
+        ok: false,
+        message: 'Дочекайтеся завершення поточної операції.',
+      };
+    }
+
+    mutationLock.current = true;
+    setIsMutating(true);
+    setNotice('');
+
+    activeRead.current?.abort();
+    readVersion.current += 1;
+
+    try {
+      const record = await operation();
+
+      if (mounted.current) {
+        setBookings((previous) => apply(previous, record));
+        setNotice(message);
+      }
+
+      return {
+        ok: true,
+        record,
+      };
+    } catch (cause) {
+      return {
+        ok: false,
+        message: errorMessage(cause),
+        errors: cause.errors,
+        code: cause.code,
+      };
+    } finally {
+      mutationLock.current = false;
+
+      if (mounted.current) {
+        setIsMutating(false);
+      }
+    }
+  }
 
   function createBooking(input) {
-    const validation = validateBooking(input, items);
-    if (!validation.ok) return validation;
-
-    const record = {
-      id: `book-${crypto.randomUUID().slice(0, 8)}`,
-      ...validation.value,
-    };
-
-    setBookings((prev) => [...prev, record]);
-    setNotice("Заявку на тур успішно створено в локальній колекції.");
-    return { ok: true, record };
+    return mutate(
+      () => bookingService.create(input),
+      (previous, record) => [
+        ...previous.filter((entry) => entry.id !== record.id),
+        record,
+      ],
+      'Заявку успішно оформлено.'
+    );
   }
 
   function updateBooking(id, input) {
-    const current = bookings.find((b) => String(b.id) === String(id));
-
-    if (!current) {
-      return { ok: false, message: "Заявку для оновлення не знайдено." };
-    }
-
-    const validation = validateBooking(input, items);
-    if (!validation.ok) return validation;
-
-    const record = { ...validation.value, id: current.id };
-
-    setBookings((prev) =>
-      prev.map((b) => (String(b.id) === String(id) ? record : b))
+    return mutate(
+      () => bookingService.update(id, input),
+      (previous, record) =>
+        previous.map((entry) => (entry.id === id ? record : entry)),
+      'Зміни заявки збережено.'
     );
-
-    setNotice("Зміни до заявки успішно збережено.");
-    return { ok: true, record };
   }
 
   function deleteBooking(id) {
-    if (!bookings.some((b) => String(b.id) === String(id))) {
-      return { ok: false, message: "Заявку для видалення не знайдено." };
-    }
-
-    setBookings((prev) =>
-      prev.filter((b) => String(b.id) !== String(id))
+    return mutate(
+      () => bookingService.delete(id),
+      (previous) => previous.filter((entry) => entry.id !== id),
+      'Заявку видалено.'
     );
-
-    setNotice("Заявку вилучено з локальної колекції.");
-    return { ok: true };
-  }
-
-  function dismissNotice() {
-    setNotice("");
   }
 
   return (
     <BookingsContext.Provider
       value={{
         bookings,
+        status,
+        error,
+        notice,
+        isMutating,
+        reload,
         createBooking,
         updateBooking,
         deleteBooking,
-        notice,
-        dismissNotice,
+        clearNotice: () => setNotice(''),
       }}
     >
       {children}
