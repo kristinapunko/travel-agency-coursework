@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 import { Link } from "react-router";
 
@@ -29,15 +29,18 @@ export default function BookingsPage({ items = [] }) {
 
   const [error, setError] = useState("");
 
-  function handleDelete(booking) {
-    setError("");
+const handleDelete = useCallback(
+  async (booking) => {
+    setError('');
 
-    const result = deleteWithConfirmation(booking);
+    const result = await deleteWithConfirmation(booking);
 
     if (!result.ok && !result.cancelled) {
       setError(result.message);
     }
-  }
+  },
+  [deleteWithConfirmation]
+);
 
   function handleReadFailureTest() {
     failNextMockBooking("getAll");

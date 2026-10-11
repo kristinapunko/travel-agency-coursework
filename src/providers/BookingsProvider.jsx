@@ -90,7 +90,8 @@ export default function BookingsProvider({ children }) {
     };
   }, []);
 
-  async function mutate(operation, apply, message) {
+const mutate = useCallback(
+  async (operation, apply, message) => {
     if (mutationLock.current || status !== 'success') {
       return {
         ok: false,
@@ -121,8 +122,8 @@ export default function BookingsProvider({ children }) {
       return {
         ok: false,
         message: errorMessage(cause),
-        errors: cause.errors,
-        code: cause.code,
+        errors: cause?.errors,
+        code: cause?.code,
       };
     } finally {
       mutationLock.current = false;
@@ -131,7 +132,9 @@ export default function BookingsProvider({ children }) {
         setIsMutating(false);
       }
     }
-  }
+  },
+  [status]
+);
 
   function createBooking(input) {
     return mutate(

@@ -1,21 +1,28 @@
+import { useCallback } from 'react';
 import useBookings from './useBookings.js';
 
 export default function useDeleteBooking(tours = []) {
   const { deleteBooking } = useBookings();
 
-  return async function deleteWithConfirmation(booking) {
-    const tour = tours.find((t) => String(t.id) === String(booking.tourId));
-    const tourTitle = tour?.name ?? `Тур #${booking.tourId}`;
+  return useCallback(
+    async (booking) => {
+      const tour = tours.find(
+        (t) => String(t.id) === String(booking.tourId)
+      );
 
-    const confirmed = window.confirm(
-      `Видалити заявку ${booking.id} на «${tourTitle}» (Клієнт: ${booking.customerName})?\n` +
-        'Запис буде видалено без можливості відновлення.'
-    );
+      const tourTitle = tour?.name ?? `Тур #${booking.tourId}`;
 
-    if (!confirmed) {
-      return { ok: false, cancelled: true };
-    }
+      const confirmed = window.confirm(
+        `Видалити заявку ${booking.id} на «${tourTitle}» (Клієнт: ${booking.customerName})?\n` +
+          'Запис буде видалено без можливості відновлення.'
+      );
 
-    return await deleteBooking(booking.id);
-  };
+      if (!confirmed) {
+        return { ok: false, cancelled: true };
+      }
+
+      return deleteBooking(booking.id);
+    },
+    [tours, deleteBooking]
+  );
 }

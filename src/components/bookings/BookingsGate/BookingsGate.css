@@ -92,7 +92,7 @@
   box-sizing: border-box;
 }
 
-.bookings-gate-card :global(button) {
+.bookings-gate-card button {
   transition:
     background-color 0.2s ease,
     transform 0.1s ease,
